@@ -1,4 +1,5 @@
 import logo from '../../assets/logo.png';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const LeafIllustration = () => (
   <svg width="90" height="100" viewBox="0 0 90 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,6 +18,10 @@ const LeafIllustration = () => (
 );
 
 const Sidebar = ({ totalNotes }) => {
+  const { width } = useWindowSize();
+const isMobile = width < 1024;
+
+if (isMobile) return null;
   return (
     <div style={styles.sidebar}>
       <div style={styles.logoContainer}>
