@@ -8,6 +8,7 @@ import NotesList from '../components/notes/NotesList';
 import SearchBar from '../components/dashboard/SearchBar';
 import Toast from '../components/ui/Toast';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
+import useWindowSize from '../hooks/useWindowSize';
 
 const DashboardPage = () => {
   const [notes, setNotes] = useState([]);
@@ -16,6 +17,10 @@ const DashboardPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState(null);
+
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isTablet = width >= 768 && width < 1024;
 
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -69,6 +74,72 @@ const DashboardPage = () => {
       note.content.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const styles = {
+    page: {
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      minHeight: '100vh',
+      backgroundColor: '#FFF0D6',
+    },
+    main: {
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    content: {
+      padding: isMobile ? '16px' : '32px',
+      flex: 1,
+    },
+        contentHeader: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '12px',
+      marginBottom: '28px',
+    },
+    heading: {
+      fontSize: isMobile ? '22px' : '28px',
+      fontWeight: '700',
+      color: '#171717',
+      margin: 0,
+    },
+    subheading: {
+      fontSize: '14px',
+      color: '#666666',
+      margin: '4px 0 0 0',
+    },
+    headerRight: {
+      display: 'flex',
+      flexDirection: isMobile ? 'column' : 'row',
+      alignItems: isMobile ? 'stretch' : 'center',
+      gap: '12px',
+      width: '100%',
+    },
+    createBtn: {
+      padding: '10px 16px',
+      backgroundColor: '#E87500',
+      color: '#FFFFFF',
+      border: 'none',
+      borderRadius: '12px',
+      fontSize: '14px',
+      fontWeight: '600',
+      cursor: 'pointer',
+      transition: 'background-color 0.2s ease',
+      fontFamily: 'Poppins, sans-serif',
+      width: isMobile ? '100%' : 'auto',
+    },
+    error: {
+      color: '#E53E3E',
+      fontSize: '14px',
+      marginBottom: '16px',
+    },
+    loading: {
+      fontSize: '16px',
+      color: '#666666',
+      textAlign: 'center',
+      padding: '40px',
+    },
+  };
+
   return (
     <div style={styles.page}>
       <Sidebar totalNotes={notes.length} />
@@ -104,11 +175,11 @@ const DashboardPage = () => {
             <p style={styles.loading}>Loading notes...</p>
           ) : (
             <NotesList
-  notes={filteredNotes}
-  onEdit={handleEdit}
-  onDelete={handleDeleteClick}
-  searchTerm={searchTerm}
-/>
+              notes={filteredNotes}
+              onEdit={handleEdit}
+              onDelete={handleDeleteClick}
+              searchTerm={searchTerm}
+            />
           )}
         </div>
       </div>
@@ -130,68 +201,6 @@ const DashboardPage = () => {
       )}
     </div>
   );
-};
-
-const styles = {
-  page: {
-    display: 'flex',
-    minHeight: '100vh',
-    backgroundColor: '#FFF0D6',
-  },
-  main: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  content: {
-    padding: '32px',
-    flex: 1,
-  },
-  contentHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '28px',
-  },
-  heading: {
-    fontSize: '28px',
-    fontWeight: '700',
-    color: '#171717',
-    margin: 0,
-  },
-  subheading: {
-    fontSize: '14px',
-    color: '#666666',
-    margin: '4px 0 0 0',
-  },
-  headerRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  createBtn: {
-    padding: '12px 24px',
-    backgroundColor: '#E87500',
-    color: '#FFFFFF',
-    border: 'none',
-    borderRadius: '12px',
-    fontSize: '15px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-    fontFamily: 'Poppins, sans-serif',
-  },
-  error: {
-    color: '#E53E3E',
-    fontSize: '14px',
-    marginBottom: '16px',
-  },
-  loading: {
-    fontSize: '16px',
-    color: '#666666',
-    textAlign: 'center',
-    padding: '40px',
-  },
 };
 
 export default DashboardPage;
